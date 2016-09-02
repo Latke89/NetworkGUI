@@ -13,6 +13,7 @@ public class Client {
 
 	public static void main(String[] args) {
 
+
 		try {
 			Socket clientSocket = new Socket("localhost", 8005);
 

@@ -23,6 +23,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class Main extends Application {
 
 	final double DEFAULT_SCENE_WIDTH = 800;
@@ -64,8 +70,7 @@ public class Main extends Application {
 		serverButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				Server myServer = new Server();
-				myServer.startServer();
+				startClient();
 			}
 
 		});
@@ -210,8 +215,22 @@ public class Main extends Application {
 		secondaryStage.show();
 	}
 
+	public static void startClient() {
+		try {
+			Socket clientSocket = new Socket("localhost", 8005);
 
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+			out.println("Marvin says hello!");
+			String serverResponse = in.readLine();
+
+			// close the connection
+			clientSocket.close();
+		} catch (IOException ioEx){
+			ioEx.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) {
         launch(args);

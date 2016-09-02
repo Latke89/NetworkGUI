@@ -12,15 +12,21 @@ import java.net.Socket;
  */
 public class Server {
 
-	public void startServer() {
+	public static void main(String[] args) {
 		try {
 			ServerSocket serverListener = new ServerSocket(8005);
 			Socket clientSocket = serverListener.accept();
 
 			System.out.println("Incoming connection from " + clientSocket.getInetAddress().getHostAddress());
 
+			String inputLine;
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			inputLine = inputFromClient.readLine();
+			System.out.println(inputLine);
+
 			PrintWriter outputToClient = new PrintWriter(clientSocket.getOutputStream(), true);
+			String outMessage = "I'm a message!";
+			outputToClient.println(outMessage);
 		} catch (IOException ioEx){
 			ioEx.printStackTrace();
 		}
