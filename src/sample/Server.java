@@ -1,5 +1,7 @@
 package sample;
 
+import jodd.json.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,22 +19,25 @@ public class Server {
 			ServerSocket serverListener = new ServerSocket(8005);
 			System.out.println("Ready to accept incoming connections!");
 
-			while(true){
+			while (true) {
 				Socket clientSocket = serverListener.accept();
 				ConnectionHandler myHandler = new ConnectionHandler(clientSocket);
 				Thread myThread = new Thread(myHandler);
 				myThread.start();
+
 			}
 
 
-
-		}catch(IOException serverException){
+		} catch (IOException serverException) {
 			serverException.printStackTrace();
 		}
 	}
 
 
-
-
-
 }
+
+
+
+
+
+

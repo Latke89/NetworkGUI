@@ -40,6 +40,9 @@ public class Main extends Application {
 	double xPosition;
 	double yPosition;
 
+
+	StrokeContainer myContainer;
+
 	GraphicsContext graphicsContext2 = null;
 
 	@Override
@@ -72,6 +75,8 @@ public class Main extends Application {
 		serverButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+//				Client myClient = new Client();
+//				myClient.startClient();
 				startClient();
 			}
 
@@ -103,18 +108,24 @@ public class Main extends Application {
 				if (drawing == true) {
 					if (e.isDragDetect()) {
 						gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
+//						jsonString = jsonStringGenerate(myContainer);
+//						System.out.println(jsonString);
+//						System.out.println(myContainer.posX);
 					}
 				}
 				if (drawing == false) {
 					gc.strokeOval(0, 0, 0, 0);
 				}
 
-				StrokeContainer myContainer = new StrokeContainer(xPosition, yPosition, strokeSize);
-
-				String jsonString = jsonStringGenerate(myContainer);
-				System.out.println(jsonString);
 				xPosition = e.getX();
 				yPosition = e.getY();
+
+				myContainer = new StrokeContainer(e.getX(), e.getY(), strokeSize);
+
+//				String jsonString = jsonStringGenerate(myContainer);
+//				System.out.println(jsonStringGenerate(myContainer));
+//				System.out.println(jsonString);
+
 				if (graphicsContext2 != null) {
 					graphicsContext2.strokeOval(xPosition, yPosition, strokeSize, strokeSize);
 				}
@@ -222,11 +233,11 @@ public class Main extends Application {
 		return jsonString;
 	}
 
-	public StrokeContainer jsonRestore(String jsonTD) {
-		JsonParser toDoItemParser = new JsonParser();
-		StrokeContainer container = toDoItemParser.parse(jsonTD, StrokeContainer.class);
+	public String jsonStringGenerate(RunnableGC myGC) {
+		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+		String jsonString = jsonSerializer.serialize(myGC);
 
-		return container;
+		return jsonString;
 	}
 
 
@@ -237,7 +248,7 @@ public class Main extends Application {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-			out.println("Marvin says hello!");
+			out.println("Constructing pylons...");
 			String serverResponse = in.readLine();
 
 //			startSecondStage();
