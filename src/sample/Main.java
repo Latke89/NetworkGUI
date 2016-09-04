@@ -22,6 +22,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import jodd.json.JsonParser;
+import jodd.json.JsonSerializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +56,7 @@ public class Main extends Application {
 		grid.setGridLinesVisible(false);
 
 		// add buttons and canvas to the grid
-		Text sceneTitle = new Text("Painting the world Color.color(Math.random())");
+		Text sceneTitle = new Text("I can taste colors!");
 		sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		grid.add(sceneTitle, 0, 0);
 
@@ -106,15 +108,18 @@ public class Main extends Application {
 				if (drawing == false) {
 					gc.strokeOval(0, 0, 0, 0);
 				}
-//                addStroke(e.getX(), e.getY(), 10);
 
+				StrokeContainer myContainer = new StrokeContainer(xPosition, yPosition, strokeSize);
+
+				String jsonString = jsonStringGenerate(myContainer);
+				System.out.println(jsonString);
 				xPosition = e.getX();
 				yPosition = e.getY();
 				if (graphicsContext2 != null) {
 					graphicsContext2.strokeOval(xPosition, yPosition, strokeSize, strokeSize);
 				}
 
-				System.out.println(xPosition);
+//				System.out.println(xPosition);
 
 			}
 		});
@@ -124,10 +129,6 @@ public class Main extends Application {
 			@Override
 			public void handle(KeyEvent e) {
 				System.out.println(e.getCode());
-//				System.out.println(e.getText());
-				if(e.getCode().equals("d")) {
-					gc.strokeOval(0, 0, 0, 0);
-				}
 				if(e.getCode().equals(KeyCode.UP)) {
 					strokeSize+=2;
 					if(strokeSize > 100){
@@ -170,24 +171,23 @@ public class Main extends Application {
 		grid.setGridLinesVisible(false);
 //        grid.setPrefSize(primaryStage.getMaxWidth(), primaryStage.getMaxHeight());
 
-		// add buttons and canvas to the grid
 		Text sceneTitle = new Text("Welcome to Paint application");
 		sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		grid.add(sceneTitle, 0, 0);
 
-		Button button = new Button("Sample paint button");
-		HBox hbButton = new HBox(10);
-		hbButton.setAlignment(Pos.TOP_LEFT);
-		hbButton.getChildren().add(button);
-		grid.add(hbButton, 0, 1);
+//		Button button = new Button("Sample paint button");
+//		HBox hbButton = new HBox(10);
+//		hbButton.setAlignment(Pos.TOP_LEFT);
+//		hbButton.getChildren().add(button);
+//		grid.add(hbButton, 0, 1);
 
-		button.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				System.out.println("I can switch to another scene here ...");
-
-			}
-		});
+//		button.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent e) {
+//				System.out.println("I can switch to another scene here ...");
+//
+//			}
+//		});
 
 
 
@@ -210,12 +210,27 @@ public class Main extends Application {
 		Scene defaultScene = new Scene(grid, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
 
 		secondaryStage.setScene(defaultScene);
-		System.out.println("About to show the second stage");
+		System.out.println("Constructing pylons...");
 
 		secondaryStage.show();
 	}
 
-	public static void startClient() {
+	public String jsonStringGenerate(StrokeContainer container) {
+		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+		String jsonString = jsonSerializer.serialize(container);
+
+		return jsonString;
+	}
+
+	public StrokeContainer jsonRestore(String jsonTD) {
+		JsonParser toDoItemParser = new JsonParser();
+		StrokeContainer container = toDoItemParser.parse(jsonTD, StrokeContainer.class);
+
+		return container;
+	}
+
+
+	public void startClient() {
 		try {
 			Socket clientSocket = new Socket("localhost", 8005);
 
@@ -225,7 +240,8 @@ public class Main extends Application {
 			out.println("Marvin says hello!");
 			String serverResponse = in.readLine();
 
-			// close the connection
+//			startSecondStage();
+
 			clientSocket.close();
 		} catch (IOException ioEx){
 			ioEx.printStackTrace();

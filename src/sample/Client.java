@@ -23,6 +23,9 @@ public class Client {
 			out.println("Marvin says hello!");
 			String serverResponse = in.readLine();
 
+			Main myMain = new Main();
+			myMain.startSecondStage();
+
 			// close the connection
 			clientSocket.close();
 		} catch (IOException ioEx){

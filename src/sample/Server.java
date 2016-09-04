@@ -15,20 +15,19 @@ public class Server {
 	public static void main(String[] args) {
 		try {
 			ServerSocket serverListener = new ServerSocket(8005);
-			Socket clientSocket = serverListener.accept();
+			System.out.println("Ready to accept incoming connections!");
 
-			System.out.println("Incoming connection from " + clientSocket.getInetAddress().getHostAddress());
+			while(true){
+				Socket clientSocket = serverListener.accept();
+				ConnectionHandler myHandler = new ConnectionHandler(clientSocket);
+				Thread myThread = new Thread(myHandler);
+				myThread.start();
+			}
 
-			String inputLine;
-			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			inputLine = inputFromClient.readLine();
-			System.out.println(inputLine);
 
-			PrintWriter outputToClient = new PrintWriter(clientSocket.getOutputStream(), true);
-			String outMessage = "I'm a message!";
-			outputToClient.println(outMessage);
-		} catch (IOException ioEx){
-			ioEx.printStackTrace();
+
+		}catch(IOException serverException){
+			serverException.printStackTrace();
 		}
 	}
 
