@@ -39,10 +39,11 @@ public class Main extends Application {
 	boolean drawing = true;
 	double xPosition;
 	double yPosition;
+	boolean sharing = false;
 	String jsonString = null;
 
 
-	StrokeContainer myContainer;
+	StrokeContainer currentStroke;
 
 	GraphicsContext graphicsContext2 = null;
 
@@ -86,9 +87,8 @@ public class Main extends Application {
 		serverButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-//				Client myClient = new Client();
-//				myClient.startClient();
 				startClient();
+				sharing = true;
 			}
 
 		});
@@ -119,15 +119,15 @@ public class Main extends Application {
 				if (drawing == true) {
 					if (e.isDragDetect()) {
 						gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
-						jsonString = jsonStringGenerate(myContainer);
-//						System.out.println(jsonString);
+						currentStroke = new StrokeContainer(e.getX(), e.getY(), strokeSize);
+						jsonString = jsonStringGenerate(currentStroke);
+						System.out.println(jsonString);
+
 					}
 				}
 
 				xPosition = e.getX();
 				yPosition = e.getY();
-
-				myContainer = new StrokeContainer(e.getX(), e.getY(), strokeSize);
 
 //				String jsonString = jsonStringGenerate(myContainer);
 //				System.out.println(jsonStringGenerate(myContainer));
@@ -176,12 +176,16 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+	public Main() {
+	}
+
 	public void startSecondStage() {
 		Stage secondaryStage = new Stage();
 		secondaryStage.setTitle("Welcome to JavaFX");
 
 		// we're using a grid layout
 		GridPane grid = new GridPane();
+
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -192,21 +196,6 @@ public class Main extends Application {
 		Text sceneTitle = new Text("Welcome to Paint application");
 		sceneTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		grid.add(sceneTitle, 0, 0);
-
-//		Button button = new Button("Sample paint button");
-//		HBox hbButton = new HBox(10);
-//		hbButton.setAlignment(Pos.TOP_LEFT);
-//		hbButton.getChildren().add(button);
-//		grid.add(hbButton, 0, 1);
-
-//		button.setOnAction(new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent e) {
-//				System.out.println("I can switch to another scene here ...");
-//
-//			}
-//		});
-
 
 
 		// add canvas
@@ -220,6 +209,8 @@ public class Main extends Application {
 
 
 //		gc.strokeOval(xPosition, yPosition, strokeSize, strokeSize);
+
+		jsonStringGenerateGC(graphicsContext2);
 
 
 		grid.add(canvas, 0, 2);
@@ -240,7 +231,7 @@ public class Main extends Application {
 		return jsonContainer;
 	}
 
-	public String jsonStringGenerateGC(RunnableGC myGC) {
+	public String jsonStringGenerateGC(GraphicsContext myGC) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
 		String jsonGC = jsonSerializer.serialize(myGC);
 

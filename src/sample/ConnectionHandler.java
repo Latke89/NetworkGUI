@@ -37,6 +37,7 @@ public class ConnectionHandler implements Runnable {
 
 
 			Main myMain = new Main();
+			myMain.main(null);
 
 //			Platform.runLater(new RunnableGC(gc, stroke));
 
