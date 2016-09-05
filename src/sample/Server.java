@@ -14,7 +14,11 @@ import java.net.Socket;
  */
 public class Server {
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
+//
+//	}
+
+	public void startServer() {
 		try {
 			ServerSocket serverListener = new ServerSocket(8005);
 			System.out.println("Ready to accept incoming connections!");

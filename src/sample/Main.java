@@ -39,6 +39,7 @@ public class Main extends Application {
 	boolean drawing = true;
 	double xPosition;
 	double yPosition;
+	String jsonString = null;
 
 
 	StrokeContainer myContainer;
@@ -65,12 +66,22 @@ public class Main extends Application {
 
 		Button button = new Button("New paint window");
 		Button serverButton = new Button("I'm a button!");
+		Button thirdButton = new Button("I'm a server!");
 		HBox hbButton = new HBox(10);
 		hbButton.setAlignment(Pos.TOP_LEFT);
 		hbButton.getChildren().add(button);
 		hbButton.getChildren().add(serverButton);
+		hbButton.getChildren().add(thirdButton);
 		grid.add(hbButton, 0, 1);
 
+		thirdButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				Server myServer = new Server();
+				myServer.startServer();
+			}
+
+		});
 
 		serverButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -108,13 +119,9 @@ public class Main extends Application {
 				if (drawing == true) {
 					if (e.isDragDetect()) {
 						gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
-//						jsonString = jsonStringGenerate(myContainer);
+						jsonString = jsonStringGenerate(myContainer);
 //						System.out.println(jsonString);
-//						System.out.println(myContainer.posX);
 					}
-				}
-				if (drawing == false) {
-					gc.strokeOval(0, 0, 0, 0);
 				}
 
 				xPosition = e.getX();
@@ -228,16 +235,16 @@ public class Main extends Application {
 
 	public String jsonStringGenerate(StrokeContainer container) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-		String jsonString = jsonSerializer.serialize(container);
+		String jsonContainer = jsonSerializer.serialize(container);
 
-		return jsonString;
+		return jsonContainer;
 	}
 
-	public String jsonStringGenerate(RunnableGC myGC) {
+	public String jsonStringGenerateGC(RunnableGC myGC) {
 		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-		String jsonString = jsonSerializer.serialize(myGC);
+		String jsonGC = jsonSerializer.serialize(myGC);
 
-		return jsonString;
+		return jsonGC;
 	}
 
 
