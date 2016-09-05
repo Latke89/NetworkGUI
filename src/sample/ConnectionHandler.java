@@ -34,8 +34,6 @@ public class ConnectionHandler implements Runnable {
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
 			PrintWriter outputToClient = new PrintWriter(inputSocket.getOutputStream(), true);
 
-
-
 			Main myMain = new Main();
 			myMain.main(null);
 
@@ -44,25 +42,18 @@ public class ConnectionHandler implements Runnable {
 
 //			jsonRestore(myMain.getJsonString());
 
-			myMain.startSecondStage();
-
-//			String firstInput;
-//			String clientName;
-//			firstInput = inputFromClient.readLine();
-//			String[] nameArray = firstInput.split("=");
-//			clientName = nameArray[1];
-//			outputToClient.println("Thank you, " + clientName);
+//			myMain.startSecondStage();
 
 
 
 
-//			String inputLine;
-//			while ((inputLine = inputFromClient.readLine()) != null) {
-////				System.out.println(clientName + " says: " + inputLine);
-//				System.out.println("Received message: " + inputLine + " from " + inputSocket.toString());
-//
-//				outputToClient.println("Message received loud and clear");
-//			}
+			String inputLine;
+			while ((inputLine = inputFromClient.readLine()) != null) {
+//				System.out.println(clientName + " says: " + inputLine);
+				System.out.println("Received message: " + inputLine + " from " + inputSocket.toString());
+
+				outputToClient.println("Message received loud and clear");
+			}
 		}catch (IOException exception){
 			exception.printStackTrace();
 		}

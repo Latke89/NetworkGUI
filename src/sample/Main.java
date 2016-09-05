@@ -246,8 +246,11 @@ public class Main extends Application {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-			out.println("Constructing pylons...");
-			String serverResponse = in.readLine();
+			while (sharing == true) {
+				out.println("Constructing pylons...");
+				String serverResponse = in.readLine();
+				System.out.println(serverResponse);
+			}
 
 //			startSecondStage();
 
