@@ -2,6 +2,7 @@ package sample;
 
 import com.sun.deploy.util.SessionState;
 import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
 import jodd.json.JsonParser;
 
 import java.awt.*;
@@ -17,25 +18,31 @@ import java.net.Socket;
 public class ConnectionHandler implements Runnable {
 
 	Socket connection;
+	GraphicsContext gc = null;
 
-	public ConnectionHandler(Socket incomingConnection) {
-		this.connection = incomingConnection;
+	public ConnectionHandler(Socket connection, GraphicsContext gc) {
+		this.connection = connection;
+		this.gc = gc;
 	}
+
+//	public ConnectionHandler(Socket incomingConnection) {
+//		this.connection = incomingConnection;
+//	}
 
 	public void run() {
-		handleIncomingConnections(connection);
+		handleIncomingConnections(connection, gc);
 	}
 
 
-	private void handleIncomingConnections(Socket inputSocket) {
+	private void handleIncomingConnections(Socket inputSocket, GraphicsContext gc) {
 		try {
 			System.out.println("Incoming connection from " + inputSocket.getInetAddress().getHostAddress());
 
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
 			PrintWriter outputToClient = new PrintWriter(inputSocket.getOutputStream(), true);
 
-			Main myMain = new Main();
-			myMain.main(null);
+//			Main myMain = new Main();
+//			myMain.main(null);
 
 //			Platform.runLater(new RunnableGC(gc, stroke));
 
@@ -50,8 +57,11 @@ public class ConnectionHandler implements Runnable {
 			String inputLine;
 			while ((inputLine = inputFromClient.readLine()) != null) {
 //				System.out.println(clientName + " says: " + inputLine);
-				System.out.println("Received message: " + inputLine + " from " + inputSocket.toString());
-
+//				System.out.println("Received message: " + inputLine + " from " + inputSocket.toString());
+//				System.out.println(inputLine);
+				StrokeContainer myStroke = jsonRestore(inputLine);
+				gc.strokeOval(myStroke.posX, myStroke.posY, myStroke.strokeSize, myStroke.strokeSize);
+//				System.out.println(myStroke.posX);
 				outputToClient.println("Message received loud and clear");
 			}
 		}catch (IOException exception){
@@ -59,12 +69,6 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
-	public RunnableGC jsonRestoreGC(String jsonTD) {
-		JsonParser graphicsContextParser = new JsonParser();
-		RunnableGC myGC = graphicsContextParser.parse(jsonTD, RunnableGC.class);
-
-		return myGC;
-	}
 
 	public StrokeContainer jsonRestore(String jsonTD) {
 		JsonParser graphicsContextParser = new JsonParser();

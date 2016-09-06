@@ -36,11 +36,13 @@ public class Main extends Application {
 	final double DEFAULT_SCENE_WIDTH = 800;
 	final double DEFAULT_SCENE_HEIGHT = 600;
 	int strokeSize = 10;
-	boolean drawing = true;
+	boolean drawing = false;
 	double xPosition;
 	double yPosition;
 	boolean sharing = false;
 	String jsonString = null;
+
+	GraphicsContext gc = null;
 
 
 	StrokeContainer currentStroke;
@@ -78,8 +80,9 @@ public class Main extends Application {
 		thirdButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				Server myServer = new Server();
-				myServer.startServer();
+				Server myServer = new Server(gc);
+				Thread serverThread = new Thread(myServer);
+				serverThread.start();
 			}
 
 		});
@@ -105,7 +108,7 @@ public class Main extends Application {
 		// add canvas
 		Canvas canvas = new Canvas(DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT-100);
 
-		GraphicsContext gc = canvas.getGraphicsContext2D();
+		gc = canvas.getGraphicsContext2D();
 		gc.setFill(Color.GREEN);
 		gc.setStroke(Color.BLUE);
 		gc.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
@@ -121,7 +124,8 @@ public class Main extends Application {
 						gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
 						currentStroke = new StrokeContainer(e.getX(), e.getY(), strokeSize);
 						jsonString = jsonStringGenerate(currentStroke);
-						System.out.println(jsonString);
+						startClient();
+//						System.out.println(jsonString);
 
 					}
 				}
@@ -246,11 +250,11 @@ public class Main extends Application {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-			while (sharing == true) {
-				out.println("Constructing pylons...");
+
+				out.println(jsonString);
 				String serverResponse = in.readLine();
 				System.out.println(serverResponse);
-			}
+
 
 //			startSecondStage();
 

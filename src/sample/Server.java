@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.canvas.GraphicsContext;
 import jodd.json.JsonParser;
 
 import java.io.BufferedReader;
@@ -12,20 +13,31 @@ import java.net.Socket;
 /**
  * Created by Brett on 9/2/16.
  */
-public class Server {
+public class Server implements Runnable{
 
-	public static void main(String[] args) {
-		startServer();
+	GraphicsContext gc = null;
+
+	@Override
+	public void run() {
+		startServer(gc);
 	}
 
-	public static void startServer() {
+	public Server(GraphicsContext gc) {
+		this.gc = gc;
+	}
+
+	//	public static void main(String[] args) {
+//		startServer();
+//	}
+
+	public void startServer(GraphicsContext gc) {
 		try {
 			ServerSocket serverListener = new ServerSocket(8005);
-			System.out.println("Ready to accept incoming connections!");
+//			System.out.println("Ready to accept incoming connections!");
 
 			while (true) {
 				Socket clientSocket = serverListener.accept();
-				ConnectionHandler myHandler = new ConnectionHandler(clientSocket);
+				ConnectionHandler myHandler = new ConnectionHandler(clientSocket, gc);
 				Thread myThread = new Thread(myHandler);
 				myThread.start();
 
