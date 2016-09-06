@@ -68,13 +68,15 @@ public class Main extends Application {
 		grid.add(sceneTitle, 0, 0);
 
 		Button button = new Button("New paint window");
-		Button serverButton = new Button("Connect to server");
+		Button serverButton = new Button("I'm a button! (Connect to server)");
 		Button thirdButton = new Button("I'm a server!");
+		Button fourthButton = new Button("Chaos control!");
 		HBox hbButton = new HBox(10);
 		hbButton.setAlignment(Pos.TOP_LEFT);
 		hbButton.getChildren().add(button);
 		hbButton.getChildren().add(serverButton);
 		hbButton.getChildren().add(thirdButton);
+		hbButton.getChildren().add(fourthButton);
 		grid.add(hbButton, 0, 1);
 
 		thirdButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -133,15 +135,9 @@ public class Main extends Application {
 				xPosition = e.getX();
 				yPosition = e.getY();
 
-//				String jsonString = jsonStringGenerate(myContainer);
-//				System.out.println(jsonStringGenerate(myContainer));
-//				System.out.println(jsonString);
-
 				if (graphicsContext2 != null) {
 					graphicsContext2.strokeOval(xPosition, yPosition, strokeSize, strokeSize);
 				}
-
-//				System.out.println(xPosition);
 
 			}
 		});
@@ -165,6 +161,9 @@ public class Main extends Application {
 				}
 				if(e.getCode().equals(KeyCode.D)){
 					drawing = !drawing;
+				}
+				if(e.getCode().equals(KeyCode.C)){
+					gc.clearRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
 				}
 			}
 		});
@@ -214,9 +213,6 @@ public class Main extends Application {
 
 //		gc.strokeOval(xPosition, yPosition, strokeSize, strokeSize);
 
-		jsonStringGenerateGC(graphicsContext2);
-
-
 		grid.add(canvas, 0, 2);
 
 		// set our grid layout on the scene
@@ -235,13 +231,6 @@ public class Main extends Application {
 		return jsonContainer;
 	}
 
-	public String jsonStringGenerateGC(GraphicsContext myGC) {
-		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-		String jsonGC = jsonSerializer.serialize(myGC);
-
-		return jsonGC;
-	}
-
 
 	public void startClient() {
 		try {
@@ -250,13 +239,9 @@ public class Main extends Application {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-
 				out.println(jsonString);
 				String serverResponse = in.readLine();
 				System.out.println(serverResponse);
-
-
-//			startSecondStage();
 
 			clientSocket.close();
 		} catch (IOException ioEx){

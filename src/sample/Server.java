@@ -26,14 +26,10 @@ public class Server implements Runnable{
 		this.gc = gc;
 	}
 
-	//	public static void main(String[] args) {
-//		startServer();
-//	}
 
 	public void startServer(GraphicsContext gc) {
 		try {
 			ServerSocket serverListener = new ServerSocket(8005);
-//			System.out.println("Ready to accept incoming connections!");
 
 			while (true) {
 				Socket clientSocket = serverListener.accept();

@@ -25,9 +25,6 @@ public class ConnectionHandler implements Runnable {
 		this.gc = gc;
 	}
 
-//	public ConnectionHandler(Socket incomingConnection) {
-//		this.connection = incomingConnection;
-//	}
 
 	public void run() {
 		handleIncomingConnections(connection, gc);
@@ -41,28 +38,11 @@ public class ConnectionHandler implements Runnable {
 			BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(inputSocket.getInputStream()));
 			PrintWriter outputToClient = new PrintWriter(inputSocket.getOutputStream(), true);
 
-//			Main myMain = new Main();
-//			myMain.main(null);
-
-//			Platform.runLater(new RunnableGC(gc, stroke));
-
-
-//			jsonRestore(myMain.getJsonString());
-
-//			myMain.startSecondStage();
-
-
-
-
 			String inputLine;
 			while ((inputLine = inputFromClient.readLine()) != null) {
-//				System.out.println(clientName + " says: " + inputLine);
-//				System.out.println("Received message: " + inputLine + " from " + inputSocket.toString());
-//				System.out.println(inputLine);
 				StrokeContainer myStroke = jsonRestore(inputLine);
 				gc.strokeOval(myStroke.posX, myStroke.posY, myStroke.strokeSize, myStroke.strokeSize);
-//				System.out.println(myStroke.posX);
-				outputToClient.println("Message received loud and clear");
+				outputToClient.println("Thanks, buddy!");
 			}
 		}catch (IOException exception){
 			exception.printStackTrace();
