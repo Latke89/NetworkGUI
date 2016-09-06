@@ -66,7 +66,7 @@ public class Main extends Application {
 		grid.add(sceneTitle, 0, 0);
 
 		Button button = new Button("New paint window");
-		Button serverButton = new Button("I'm a button!");
+		Button serverButton = new Button("Connect to server");
 		Button thirdButton = new Button("I'm a server!");
 		HBox hbButton = new HBox(10);
 		hbButton.setAlignment(Pos.TOP_LEFT);
