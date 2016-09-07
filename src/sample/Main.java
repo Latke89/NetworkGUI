@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -41,8 +42,11 @@ public class Main extends Application {
 	double yPosition;
 	boolean sharing = false;
 	String jsonString = null;
+	String jsonList = null;
 
 	GraphicsContext gc = null;
+
+	ArrayList<StrokeContainer> myStrokes = new ArrayList<>();
 
 
 	StrokeContainer currentStroke;
@@ -68,16 +72,34 @@ public class Main extends Application {
 		grid.add(sceneTitle, 0, 0);
 
 		Button button = new Button("New paint window");
-		Button serverButton = new Button("I'm a button! (Connect to server)");
+		Button clientButton = new Button("I'm a button! (Connect to server)");
 		Button thirdButton = new Button("I'm a server!");
-		Button fourthButton = new Button("Chaos control!");
+		Button fourthButton = new Button("Do it again!");
 		HBox hbButton = new HBox(10);
 		hbButton.setAlignment(Pos.TOP_LEFT);
 		hbButton.getChildren().add(button);
-		hbButton.getChildren().add(serverButton);
+		hbButton.getChildren().add(clientButton);
 		hbButton.getChildren().add(thirdButton);
 		hbButton.getChildren().add(fourthButton);
 		grid.add(hbButton, 0, 1);
+
+		button.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				System.out.println("I can switch to another scene here ...");
+                startSecondStage();
+			}
+		});
+
+		clientButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				drawing = true;
+//				startClient();
+
+			}
+
+		});
 
 		thirdButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -89,22 +111,11 @@ public class Main extends Application {
 
 		});
 
-		serverButton.setOnAction(new EventHandler<ActionEvent>() {
+		fourthButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				startClient();
-				sharing = true;
 			}
 
-		});
-
-		button.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				System.out.println("I can switch to another scene here ...");
-//                primaryStage.setScene(loginScene);
-                startSecondStage();
-			}
 		});
 
 		// add canvas
@@ -125,10 +136,10 @@ public class Main extends Application {
 					if (e.isDragDetect()) {
 						gc.strokeOval(e.getX(), e.getY(), strokeSize, strokeSize);
 						currentStroke = new StrokeContainer(e.getX(), e.getY(), strokeSize);
+						currentStroke.myStrokes.add(currentStroke);
 						jsonString = jsonStringGenerate(currentStroke);
 						startClient();
 //						System.out.println(jsonString);
-
 					}
 				}
 
@@ -231,6 +242,13 @@ public class Main extends Application {
 		return jsonContainer;
 	}
 
+	public String jsonStringGenerate(ArrayList<StrokeContainer> myList) {
+		JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+		String jsonContainer = jsonSerializer.serialize(myList);
+
+		return jsonContainer;
+	}
+
 
 	public void startClient() {
 		try {
@@ -248,6 +266,8 @@ public class Main extends Application {
 			ioEx.printStackTrace();
 		}
 	}
+
+
 
 	public static void main(String[] args) {
         launch(args);

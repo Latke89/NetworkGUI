@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by Brett on 8/25/16.
@@ -19,6 +20,7 @@ public class ConnectionHandler implements Runnable {
 
 	Socket connection;
 	GraphicsContext gc = null;
+	ArrayList<StrokeContainer> strokeList = new ArrayList<>();
 
 	public ConnectionHandler(Socket connection, GraphicsContext gc) {
 		this.connection = connection;
@@ -56,6 +58,13 @@ public class ConnectionHandler implements Runnable {
 
 		return container;
 	}
+
+//	public ArrayList<StrokeContainer> jsonListRestore(String jsonTD) {
+//		JsonParser graphicsContextParser = new JsonParser();
+//		ArrayList<StrokeContainer> myList = graphicsContextParser.parse(jsonTD, StrokeContainer.class);
+//
+//		return myList;
+//	}
 
 
 }

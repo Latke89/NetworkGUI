@@ -1,5 +1,7 @@
 package sample;
 
+import java.util.ArrayList;
+
 /**
  * Created by Brett on 9/4/16.
  */
@@ -8,6 +10,8 @@ public class StrokeContainer {
 	double posX = 0;
 	double posY = 0;
 	int strokeSize = 0;
+
+	ArrayList<StrokeContainer> myStrokes = new ArrayList<>();
 
 	public StrokeContainer(double posX, double posY, int strokeSize) {
 		this.posX = posX;
